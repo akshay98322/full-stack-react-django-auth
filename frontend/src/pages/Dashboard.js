@@ -1,12 +1,15 @@
-import {Button, CssBaseline, Grid, Typography} from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import {Button, CssBaseline, Grid, Typography} from "@mui/material";
+
 import ChangePass from "./auth/ChangePass";
+import { removeToken } from "../services/LocalStorageService";
+
 
 
 function Dashboard() {
     const navigate = useNavigate();
     const handleLogout = () => {
-        console.log("clicked");
+        removeToken();
         navigate("/login");
     }
 
