@@ -1,38 +1,44 @@
-import { TextField, Button, Box, Alert } from "@mui/material"
 import React, { useState } from 'react'
 import { NavLink, useNavigate } from "react-router-dom";
+import { TextField, Button, Box, Typography, Alert, CircularProgress } from "@mui/material"
 
-function UserLogin() {
-    const [error, setError] = useState({
-        status: false,
-        msg: "",
-        type: ""
-    });
+import { storeToken } from "../../services/LocalStorageService";
+import { useLoginUserMutation } from '../../services/userAuthApi';
+
+const UserLogin = () =>{
+
+    const [ loginUser, {isLoading}] = useLoginUserMutation();
+    const [serverError, setServerError] = useState({});
     const navigate = useNavigate();
-    const handleSubmit = (e) => {
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const data = new FormData(e.currentTarget);
         const actualData = {
             email: data.get('email'),
             password: data.get('password')
         };
-        if (actualData.email && actualData.password) {
-            document.getElementById('login-form').reset();
-            setError({status: true, msg: "Login Success", type: "success"});
-            navigate('/dashboard');
-        } else {
-            setError({status: true, msg: "Please fill all the fields", type: "error"});
+        const response = await loginUser(actualData);
+        if (response.error){
+          setServerError(response.error.data.errors);
         }
+        if (response.data){
+            storeToken(response.data.token);
+            navigate('/dashboard');
+        } 
+        
 
     }
   return (
     <>
     <Box component='form' noValidate id='login-form' onSubmit={handleSubmit}>
         <TextField required fullWidth margin='normal' id='email' name='email' label='Email' type='email' />
+        {serverError.email ? <Typography style={{ fontSize: 12, color: 'red', paddingLeft: 10}}>{serverError.email[0]}</Typography> : ""}
         <TextField required fullWidth margin='normal' id='password' name='password' label='Password' type='password'/>
-        <Box textAlign='center'><Button type='submit' variant='contained' sx={{mt: 3, mb: 2, px:5}}>Login</Button></Box>
+        {serverError.password ? <Typography style={{ fontSize: 12, color: 'red', paddingLeft: 10}}>{serverError.password[0]}</Typography> : ""}
+        <Box textAlign='center'>{ isLoading ? <CircularProgress/> : <Button type='submit' variant='contained' sx={{mt: 3, mb: 2, px:5}}>Login</Button>}</Box>
         <NavLink to='/sendpassresemail'>Forgot Password ?</NavLink>
-        {error.status ? <Alert severity={error.type}>{error.msg}</Alert>: null}
+        {serverError.non_field_errors ? <Alert severity="error" >{serverError.non_field_errors[0]}</Alert> : ""}
     </Box>
     </>
   )

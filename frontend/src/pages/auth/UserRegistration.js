@@ -1,13 +1,16 @@
-import { TextField, Button, Box, Alert, FormControlLabel, Checkbox, Typography } from "@mui/material"
 import React, { useState } from 'react'
 import { useNavigate } from "react-router-dom";
+import { TextField, Button, Box, Alert, FormControlLabel, Checkbox, Typography } from "@mui/material"
+
 import { useRegisterUserMutation } from '../../services/userAuthApi';
+import { storeToken } from "../../services/LocalStorageService";
+
 
 const UserRegistration = () => {
   
     const [serverError, setServerError] = useState({});    
     const navigate = useNavigate();
-    const [registerUser, { isLoading }] = useRegisterUserMutation();
+    const [registerUser] = useRegisterUserMutation();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -24,8 +27,9 @@ const UserRegistration = () => {
           setServerError(response.error.data.errors);
         }
         if (response.data){
-          navigate('dashboard');
-          console.log(response.data);
+          storeToken(response.data.token);
+          navigate('/dashboard');
+
         }
     }
   return (
