@@ -1,8 +1,8 @@
 const storeToken = (value) => {
     if (value) {
-        const {access, refersh} = value;
+        const {access, refresh } = value;
         localStorage.setItem('access_token', access);
-        localStorage.setItem('refresh_token', refersh);
+        localStorage.setItem('refresh_token', refresh);
     }
 }
 
