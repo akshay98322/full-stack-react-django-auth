@@ -4,7 +4,6 @@ export const userAuthApi = createApi({
   reducerPath: "userAuthApi",
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:8000/api/user/" }),
   endpoints: (builder) => ({
-
     registerUser: builder.mutation({
       query: (user) => {
         return {
@@ -28,15 +27,31 @@ export const userAuthApi = createApi({
     }),
 
     getLoggedUser: builder.query({
-        query: (access_token) => {
-          return {
-            url: "profile/",
-            method: "GET",
-            headers: { "authorization": `Bearer ${access_token}` },
-          };
-        },
-      }),
+      query: (access_token) => {
+        return {
+          url: "profile/",
+          method: "GET",
+          headers: { authorization: `Bearer ${access_token}` },
+        };
+      },
+    }),
+
+    changeUserPassword: builder.mutation({
+      query: ({ actualData, access_token }) => {
+        return {
+          url: "changepass/",
+          method: "POST",
+          body: actualData,
+          headers: { authorization: `Bearer ${access_token}` },
+        };
+      },
+    }),
   }),
 });
 
-export const { useRegisterUserMutation, useLoginUserMutation, useGetLoggedUserQuery } = userAuthApi;
+export const {
+  useRegisterUserMutation,
+  useLoginUserMutation,
+  useGetLoggedUserQuery,
+  useChangeUserPasswordMutation,
+} = userAuthApi;
