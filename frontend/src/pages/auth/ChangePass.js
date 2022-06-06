@@ -1,5 +1,7 @@
-import { TextField, Button, Box, Alert } from "@mui/material"
-import React, {useState} from 'react'
+import { TextField, Button, Box, Alert } from "@mui/material";
+
+import React, {useState} from 'react';
+import { useSelector } from "react-redux";
 
 function ChangePass() {
     const [error, setError] = useState({
@@ -25,7 +27,10 @@ function ChangePass() {
             setError({status: true, msg: "Please fill all the fields", type: "error"});
         }
 
-    }
+    };
+    // getting user data from redux store
+    const userData = useSelector(state => state.user);
+    console.log(userData);
   return (
     <>
     <Box sx={{display: 'flex', flexDirection: 'column', flexWrap: 'wrap', maxWidth: 600, mx:4}}>
