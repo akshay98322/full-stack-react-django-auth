@@ -3,12 +3,16 @@ import {Button, CssBaseline, Grid, Typography} from "@mui/material";
 
 import ChangePass from "./auth/ChangePass";
 import { removeToken } from "../services/LocalStorageService";
+import { useDispatch } from "react-redux";
+import { unsetUserToken } from "../features/authSlice";
 
 
 
 function Dashboard() {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const handleLogout = () => {
+        dispatch(unsetUserToken({access_token: null}));
         removeToken();
         navigate("/login");
     }
