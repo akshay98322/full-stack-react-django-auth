@@ -1,15 +1,18 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { NavLink, useNavigate } from "react-router-dom";
 import { TextField, Button, Box, Typography, Alert, CircularProgress } from "@mui/material"
+import { useDispatch } from 'react-redux';
 
-import { storeToken } from "../../services/LocalStorageService";
+import { getToken, storeToken } from "../../services/LocalStorageService";
 import { useLoginUserMutation } from '../../services/userAuthApi';
+import { setUserToken } from '../../features/authSlice';
 
 const UserLogin = () =>{
 
     const [ loginUser, {isLoading}] = useLoginUserMutation();
     const [serverError, setServerError] = useState({});
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -24,11 +27,17 @@ const UserLogin = () =>{
         }
         if (response.data){
             storeToken(response.data.token);
+            let {access_token} = getToken();
+            dispatch(setUserToken({access_token: access_token}));
             navigate('/dashboard');
         } 
-        
-
     }
+    
+    let {access_token} = getToken();
+    useEffect( () => {
+      dispatch(setUserToken({access_token: access_token}))
+    }, [access_token, dispatch]);
+
   return (
     <>
     <Box component='form' noValidate id='login-form' onSubmit={handleSubmit}>
@@ -44,4 +53,4 @@ const UserLogin = () =>{
   )
 }
 
-export default UserLogin
+export default UserLogin;
