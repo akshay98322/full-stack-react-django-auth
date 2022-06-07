@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { Button, CssBaseline, Grid, Typography } from "@mui/material";
 
 import ChangePass from "./auth/ChangePass";
-import { setUserInfo,unsetUserInfo } from "../features/userSlice";
 import { unsetUserToken } from "../features/authSlice";
 import { useGetLoggedUserQuery } from "../services/userAuthApi";
+import { setUserInfo, unsetUserInfo } from "../features/userSlice";
 import { getToken, removeToken } from "../services/LocalStorageService";
 
 function Dashboard() {
@@ -27,7 +27,7 @@ function Dashboard() {
       });
     }
   }, [data, isSuccess]);
-  
+
   // Store user data in redux store
   useEffect(() => {
     if (data && isSuccess) {

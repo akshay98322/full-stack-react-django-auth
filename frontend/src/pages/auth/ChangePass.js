@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-// import { useSelector } from "react-redux";
 import { TextField, Button, Box, Alert, Typography } from "@mui/material";
 
-import { useChangeUserPasswordMutation } from "../../services/userAuthApi";
 import { getToken } from "../../services/LocalStorageService";
+import { useChangeUserPasswordMutation } from "../../services/userAuthApi";
 
 function ChangePass() {
   const [serverError, setServerError] = useState({});
@@ -20,19 +19,17 @@ function ChangePass() {
     };
     const response = await changeUserPassword({ actualData, access_token });
     if (response.error) {
-        setServerMsg({});
-        setServerError(response.error.data.errors);
+      setServerMsg({});
+      setServerError(response.error.data.errors);
     }
     if (response.data) {
-        setServerError({});
-        setServerMsg(response.data);
-        console.log(response.data)
-        document.getElementById("pass-change-form").reset();
+      setServerError({});
+      setServerMsg(response.data);
+      console.log(response.data);
+      document.getElementById("pass-change-form").reset();
     }
   };
-  // getting user data from redux store
-  // const userData = useSelector((state) => state.user);
-  //   console.log(userData);
+  
   return (
     <>
       <Box

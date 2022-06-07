@@ -1,20 +1,20 @@
 const storeToken = (value) => {
-    if (value) {
-        const {access, refresh } = value;
-        localStorage.setItem('access_token', access);
-        localStorage.setItem('refresh_token', refresh);
-    }
-}
+  if (value) {
+    const { access, refresh } = value;
+    localStorage.setItem("access_token", access);
+    localStorage.setItem("refresh_token", refresh);
+  }
+};
 
 const getToken = () => {
-    const access_token = localStorage.getItem('access_token');
-    const refresh_token = localStorage.getItem('refresh_token');
-    return {access_token, refresh_token};
-}
+  const access_token = localStorage.getItem("access_token");
+  const refresh_token = localStorage.getItem("refresh_token");
+  return { access_token, refresh_token };
+};
 
 const removeToken = () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-}
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("refresh_token");
+};
 
-export {storeToken, getToken, removeToken};
+export { storeToken, getToken, removeToken };

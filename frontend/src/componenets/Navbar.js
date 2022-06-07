@@ -1,5 +1,6 @@
-import { AppBar, Box, Toolbar, Typography, Button } from "@mui/material";
 import { NavLink } from "react-router-dom";
+import { AppBar, Box, Toolbar, Typography, Button } from "@mui/material";
+
 import { getToken } from "../services/LocalStorageService";
 
 const Navbar = () => {
