@@ -79,7 +79,8 @@ class SendPassResetMailSerializer(serializers.Serializer):
                 "body":f'Your Password reset link is: {reset_link}',
                 "to": email
             }
-            Util.send_email(data)
+            # Util.send_email(data)
+            print("email sent")
             return attrs
         else:
             raise serializers.ValidationError("Email is not registered.")
