@@ -20,7 +20,7 @@ function App() {
         <Route path='contact' element={<Contact/>} />
         <Route path='login' element={access_token ? <Navigate to="/dashboard"/> : <LoginReg/>} />
         <Route path='sendpassresemail' element={<SendPassResEmail/>} />
-        <Route path='reset' element={<ResetPass/>} />
+        <Route path='api/user/reset-pass/:id/:token/' element={<ResetPass/>} />  {/* As we dont have base url for this so mentioned full path */}
         <Route path='dashboard' element={access_token ? <Dashboard/>: <Navigate to="/login"/> } />
       </Route>
         <Route path="*" element={<h1>Error 404 Page not found !!</h1>} />

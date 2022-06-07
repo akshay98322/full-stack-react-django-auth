@@ -1,31 +1,34 @@
-import {Grid, TextField, Button, Box, Alert } from "@mui/material"
 import React, { useState } from 'react'
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import {Grid, TextField, Button, Box, Alert, Typography } from "@mui/material"
+
+import { useResetPasswordMutation } from '../../services/userAuthApi'
+
 
 function ResetPass() {
-    const [error, setError] = useState({
-        status: false,
-        msg: "",
-        type: ""
-    });
+    const [serverError, setServerError] = useState({})
+    const [serverMsg, setServerMsg] = useState({})
+    const [ resetPassword ] = useResetPasswordMutation()
+    const { id, token } = useParams()
+
     const navigate = useNavigate();
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const data = new FormData(e.currentTarget);
         const actualData = {
             password: data.get('password'),
             password2: data.get('password2'),
         };
-        if (actualData.password && actualData.password2) {
-            if (actualData.password === actualData.password2) {
-                document.getElementById('pass-reset-form').reset();
-                setError({status: true, msg: "Password Reset Success", type: "success"});
-                setTimeout(() => {navigate('/login')} , 3000);
-            } else {
-                setError({status: true, msg: "Password and Confirm Password doesn't match", type: "error"});
-            }
-        } else {
-            setError({status: true, msg: "Please fill all the fields", type: "error"});
+        const response = await resetPassword({actualData, id, token});
+        if (response.error) {
+            setServerMsg({});
+            setServerError(response.error.data.errors);
+        }
+        if (response.data) {
+            setServerError({});
+            setServerMsg(response.data);
+            document.getElementById("pass-reset-form").reset();
+            setTimeout(()=>{ navigate('/login') }, 3000)
         }
 
     }
@@ -36,9 +39,12 @@ function ResetPass() {
             <h1>Reset Password</h1>
             <Box component='form' noValidate id='pass-reset-form' onSubmit={handleSubmit}>
                 <TextField required fullWidth margin='normal' id='password' name='password' label='New Password' type='password'/>
+                {serverError.password ? <Typography style={{ fontSize: 12, color: 'red', paddingLeft: 10}}>{serverError.password[0]}</Typography> : ""}
                 <TextField required fullWidth margin='normal' id='password2' name='password2' label='Confirm New Password' type='password'/>
+                {serverError.password2 ? <Typography style={{ fontSize: 12, color: 'red', paddingLeft: 10}}>{serverError.password2[0]}</Typography> : ""}
                 <Box textAlign='center'><Button type='submit' variant='contained' sx={{mt: 3, mb: 2, px:5}}>Submit</Button></Box>
-                {error.status ? <Alert severity={error.type}>{error.msg}</Alert>: null}
+                {serverError.non_field_errors ? <Alert severity="error">{serverError.non_field_errors[0]}</Alert> : "" }
+                {serverMsg.msg ? <Alert severity="success">{serverMsg.msg}</Alert> : "" }
             </Box>
         </Grid>
     </Grid>

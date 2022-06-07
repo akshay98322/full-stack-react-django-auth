@@ -80,7 +80,7 @@ class SendPassResetMailSerializer(serializers.Serializer):
                 "to": email
             }
             # Util.send_email(data)
-            print("email sent")
+            print(data["body"])
             return attrs
         else:
             raise serializers.ValidationError("Email is not registered.")
